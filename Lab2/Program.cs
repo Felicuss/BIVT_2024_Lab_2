@@ -13,7 +13,7 @@ public class Program
     {
         Program program = new Program();
 
-        Console.WriteLine(program.Task_3_5(30));
+        Console.WriteLine(program.Task_3_11());
     }
     #region Level 1
     public bool Task_1_1(double x, double y){
@@ -160,7 +160,7 @@ public class Program
         {
             double x = double.Parse(Console.ReadLine());
             double y = double.Parse(Console.ReadLine());
-            if ((x >= 0) && (x <= Math.PI) && (Math.Sin(x) >= y)) answer += 1;
+            if ((x >= 0) && (x <= Math.PI) && (Math.Sin(x) >= y) && (y >= 0)) answer += 1;
         }
 
         // for test input in console: 1.2 0.7, 2 0.2, 0.5 0.9, -1 1.5, 0.5 0.1
@@ -261,11 +261,12 @@ public class Program
 
         if (r <= 0) return 0;
 
-        if (type == 0) answer = r * r;
-        else if (type == 1) answer = Math.PI * r * r;
-        else if (type == 2) answer = Math.Sqrt(3) * r * r / 4;
-
-
+        switch (type)
+        {
+            case 0: answer = r * r; break;
+            case 1: answer = Math.PI * r * r; break;
+            case 2: answer = Math.Sqrt(3) * r * r / 4; break;
+        }
         return Math.Round(answer, 2);
     }
     public double Task_2_13(double A, double B, int type)
@@ -310,14 +311,10 @@ public class Program
 
         double x, y = 0;
         int answer = 0;
-        bool true_or_false = false;
         while (true)
         {
-            true_or_false = double.TryParse(Console.ReadLine(), out x);
-            if (true_or_false == false) break;
-            true_or_false = double.TryParse(Console.ReadLine(), out y);
-            if (true_or_false == false) break;
-
+            if (double.TryParse(Console.ReadLine(), out x) == false) break;
+            if (double.TryParse(Console.ReadLine(), out y) == false) break;
             double distanceSquared = (x - a) * (x - a) + (y - b) * (y - b);
             if (distanceSquared <= r * r) answer += 1;
 
@@ -360,12 +357,10 @@ public class Program
     {
         int answer = 0, n = 0;
         double true_or_false = 1;
-        string speed = Console.ReadLine();
 
-        while (double.TryParse(speed, out true_or_false))
+        while (double.TryParse(Console.ReadLine(), out true_or_false))
         {
-            answer = double.Parse(speed) <= norm ? answer + 1 : answer;
-            speed = Console.ReadLine();
+            answer = true_or_false <= norm ? answer + 1 : answer;
         }
         // for test input in console: 27.5, 32.5, 30, 22.3, 26.8, 36.6, 30, 29.9, 20.1, 28.5
         // answer should be equal to the task_2_5 answer
@@ -402,28 +397,24 @@ public class Program
     {
         int answer = 0, n = 0;
         double answerLength = double.MaxValue;
-        double true_or_false = 1;
 
-        string x = Console.ReadLine();
-        string y = Console.ReadLine();
+        double x, y;
         int count = 1;
 
-        while (double.TryParse(x, out true_or_false) && double.TryParse(y, out true_or_false))
+        while (double.TryParse(Console.ReadLine(), out x) && double.TryParse(Console.ReadLine(), out y))
         {
-            double d = Math.Sqrt(double.Parse(x) * double.Parse(x) + double.Parse(y) * double.Parse(y));
+            double d = Math.Sqrt(x * x + y * y);
             if (d < answerLength)
             {
                 answer = count;
                 answerLength = d;
             }
             count++;
-            x = Console.ReadLine();
-            y = Console.ReadLine();
         }
         // for test input in console: -1.2 0.7, 2 -2, 0.5 0.9, 1 1.5, -0.5 -0.5
         // answer should be equal to the task_2_8 answer
 
-        return (answer, answerLength);
+        return (answer, Math.Round(answerLength, 2));
     }
     public double Task_3_9()
     {
@@ -456,32 +447,18 @@ public class Program
     {
         int answer = 0, n = 0;
         double avg = 0.0;
+        int num1, num2, num3, num4;
 
-        int true_or_false = 1;
-
-        string num1 = Console.ReadLine();
-        string num2 = Console.ReadLine();
-        string num3 = Console.ReadLine();
-        string num4 = Console.ReadLine();
-
-        while (int.TryParse(num1, out true_or_false) && int.TryParse(num2, out true_or_false) && int.TryParse(num3, out true_or_false) && int.TryParse(num4, out true_or_false))
+        while (int.TryParse(Console.ReadLine(), out num1) && int.TryParse(Console.ReadLine(), out num2) && int.TryParse(Console.ReadLine(), out num3) && int.TryParse(Console.ReadLine(), out num4))
         {
-            if (int.Parse(num1) == 2 || int.Parse(num2) == 2 || int.Parse(num3) == 2 || int.Parse(num4) == 2)
+            if (num1 == 2 || num2 == 2 || num3 == 2 || num4 == 2)
             {
                 answer++;
             }
-            avg += (int.Parse(num1) + int.Parse(num2) + int.Parse(num3) + int.Parse(num4));
-            num1 = Console.ReadLine();
-            num2 = Console.ReadLine();
-            num3 = Console.ReadLine();
-            num4 = Console.ReadLine();
-
+            avg += (num1 + num2 + num3 + num4);
+            n++;
         }
-
-        // for test input in console: 5, 3, 3, 4, 5, 2, 4, 5, 5, 4, 5, 4, 2, 5, 3, 5, 4, 5, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 4, 4, 2, 5, 2, 2, 4, 2, 5, 4, 5, 4
-        // answer should be equal to the task_2_11 answer
-
-        return (answer, avg);
+        return (answer, avg / (n * 4));
     }
     public double Task_3_12(double r, int type)
     {
